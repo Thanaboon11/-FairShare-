@@ -9,6 +9,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <link rel="apple-touch-icon" href="1.png">
 
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkZhaXJTaGFyZSIsCiAgInNob3J0X25hbWUiOiAiRmFpclNoYXJlIiwKICAic3RhcnRfdXJsIjogIi4iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiNGOEY2RjEiLAogICJ0aGVtZV9jb2xvciI6ICIjRjlGNkYxIiwKICAiaWNvbnMiOiBbCiAgICB7CiAgICAgICJzcmMiOiAiMS5wbmciLAogICAgICAic2l6ZXMiOiAiMTkyeDE5MiIsCiAgICAgICJ0eXBlIjogImltYWdlL3BuZyIsCiAgICAgICJwdXJwb3NlIjogImFueSBtYXNrYWJsZSIKICAgIH0sCiAgICB7CiAgICAgICJzcmMiOiAiMS5wbmciLAogICAgICAic2l6ZXMiOiAiNTEyeDUxMiIsCiAgICAgICJ0eXBlIjogImltYWdlL3BuZyIsCiAgICAgICJwdXJwb3NlIjogImFueSBtYXNrYWJsZSIKICAgIH0KICBdCn0=">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -20,7 +22,7 @@
             background-color: #F9F6F1;
             color: #5D544B;
             -webkit-tap-highlight-color: transparent;
-            overflow-x: hidden;
+            touch-action: manipulation;
         }
 
         .main-card {
@@ -36,18 +38,14 @@
             padding: 10px 15px;
             width: 100%;
             outline: none;
-            font-size: 14px;
         }
 
         .gradient-btn {
             background: linear-gradient(135deg, #64D2B7 0%, #4A90E2 100%);
             color: white;
-            border-radius: 1rem;
+            border-radius: 1.1rem;
             font-weight: 600;
-            transition: all 0.2s;
         }
-
-        .gradient-btn:active { transform: scale(0.98); opacity: 0.9; }
 
         .item-row {
             background: white;
@@ -56,23 +54,11 @@
             margin-bottom: 8px;
             box-shadow: 0 2px 8px rgba(93, 84, 75, 0.02);
         }
-
-        /* ป้องกันปุ่มซ้อนทับกันที่ด้านล่าง */
-        .bottom-nav {
-            position: fixed;
-            bottom: 24px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: calc(100% - 48px);
-            max-width: 400px;
-            z-index: 50;
-        }
     </style>
 </head>
-<body class="pb-40">
+<body class="pb-32">
 
     <div class="max-w-md mx-auto px-5 pt-8">
-        
         <div class="flex justify-between items-center mb-6">
             <div class="flex items-center gap-3">
                 <div class="w-11 h-11 rounded-xl shadow-sm overflow-hidden bg-white p-1">
@@ -83,7 +69,7 @@
                     <p class="text-[9px] font-bold text-[#A69680] uppercase tracking-widest mt-1">PWA EDITION</p>
                 </div>
             </div>
-            <button onclick="resetApp()" class="w-9 h-9 bg-white rounded-full flex items-center justify-center text-red-200 shadow-sm active:text-red-400">
+            <button onclick="resetApp()" class="w-9 h-9 bg-white rounded-full flex items-center justify-center text-red-200 shadow-sm active:scale-90 transition-transform">
                 <i class="fa-solid fa-rotate-left text-sm"></i>
             </button>
         </div>
@@ -103,7 +89,7 @@
                 </div>
                 <div class="w-[1px] h-5 bg-[#E8DCC4]"></div>
                 <div class="text-left">
-                    <p class="text-[8px] font-bold text-[#A69680] uppercase">จำนวน</p>
+                    <p class="text-[8px] font-bold text-[#A69680] uppercase">จำนวนคน</p>
                     <p id="peopleDisplay" class="text-xs font-bold">2 คน</p>
                 </div>
             </div>
@@ -120,7 +106,7 @@
                     <input type="number" id="itemPrice" placeholder="0" class="input-box">
                 </div>
             </div>
-            <button onclick="addItem()" class="w-full gradient-btn py-3.5 flex items-center justify-center gap-2 shadow-md">
+            <button onclick="addItem()" class="w-full gradient-btn py-3.5 flex items-center justify-center gap-2 shadow-sm">
                 <i class="fa-solid fa-plus text-[10px]"></i> เพิ่มรายการ
             </button>
         </div>
@@ -133,22 +119,22 @@
                 <span class="font-bold text-[#8C7E6D] text-xs">จำนวนคนหาร</span>
             </div>
             <div class="flex items-center gap-3">
-                <button onclick="updatePeople(-1)" class="w-9 h-9 bg-white rounded-full flex items-center justify-center text-[#A69680] shadow-sm">
+                <button onclick="updatePeople(-1)" class="w-9 h-9 bg-white rounded-full flex items-center justify-center text-[#A69680] shadow-sm active:scale-90 transition-all">
                     <i class="fa-solid fa-minus text-[10px]"></i>
                 </button>
                 <span id="numPeopleText" class="text-xl font-black w-5 text-center">2</span>
-                <button onclick="updatePeople(1)" class="w-9 h-9 gradient-btn rounded-full flex items-center justify-center shadow-sm">
+                <button onclick="updatePeople(1)" class="w-9 h-9 gradient-btn rounded-full flex items-center justify-center shadow-sm active:scale-90 transition-all">
                     <i class="fa-solid fa-plus text-[10px]"></i>
                 </button>
             </div>
         </div>
     </div>
 
-    <div class="bottom-nav flex gap-3">
-        <button onclick="copyToClipboard()" class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-[#A69680] shadow-lg border border-white active:scale-90 transition-transform">
+    <div class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-40px)] max-w-md flex gap-3">
+        <button onclick="copyToClipboard()" class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-[#A69680] shadow-lg border border-white active:scale-90 transition-all">
             <i class="fa-solid fa-copy text-lg"></i>
         </button>
-        <button onclick="shareSummary()" class="flex-1 gradient-btn rounded-2xl flex items-center justify-center gap-3 shadow-lg">
+        <button onclick="shareSummary()" class="flex-1 gradient-btn rounded-2xl flex items-center justify-center gap-3 shadow-lg active:scale-95 transition-all">
             <i class="fa-solid fa-share-nodes text-sm"></i>
             <span class="text-sm">ส่งสรุปยอดให้เพื่อน</span>
         </button>
@@ -185,14 +171,14 @@
             document.getElementById('peopleDisplay').innerText = `${numPeople} คน`;
 
             container.innerHTML = items.map(item => `
-                <div class="item-row flex justify-between items-center shadow-sm">
+                <div class="item-row flex justify-between items-center">
                     <div class="flex items-center gap-3">
                         <div class="w-1.5 h-1.5 rounded-full bg-[#4A90E2]"></div>
-                        <span class="font-bold text-sm">${item.name}</span>
+                        <span class="font-bold text-sm text-[#5D544B]">${item.name}</span>
                     </div>
                     <div class="flex items-center gap-4">
                         <span class="font-bold text-[#8C7E6D] text-sm">฿${item.price.toLocaleString()}</span>
-                        <button onclick="removeItem(${item.id})" class="text-[#D1C8BC] active:text-red-400 p-1">
+                        <button onclick="removeItem(${item.id})" class="text-[#D1C8BC] active:text-red-400 p-1 transition-colors">
                             <i class="fa-solid fa-trash-can text-xs"></i>
                         </button>
                     </div>
@@ -215,14 +201,14 @@
 
         function copyToClipboard() {
             const total = items.reduce((s, i) => s + i.price, 0);
-            const text = `💸 FairShare\nยอดรวม: ฿${total}\nจำนวน: ${numPeople} คน\nจ่ายคนละ: ฿${(total/numPeople).toFixed(2)}`;
+            const text = `💸 FairShare Summary\nยอดรวม: ฿${total}\nจำนวน: ${numPeople} คน\nจ่ายคนละ: ฿${(total/numPeople).toFixed(2)}`;
             navigator.clipboard.writeText(text);
             alert("คัดลอกสรุปแล้ว ✨");
         }
 
         function shareSummary() {
             if (navigator.share) {
-                navigator.share({ title: 'FairShare', text: 'สรุปยอดหารเงินจากแอป FairShare' });
+                navigator.share({ title: 'FairShare', text: 'แชร์ยอดหารเงิน' });
             } else {
                 copyToClipboard();
             }
