@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FairShare</title>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="apple-touch-icon" href="1.png">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Anuphan', sans-serif;
+            background-color: #F9F6F1;
+            color: #5D544B;
+            -webkit-tap-highlight-color: transparent;
+            overflow-x: hidden;
+        }
+
+        .main-card {
+            background: white;
+            border-radius: 2rem;
+            box-shadow: 0 10px 25px rgba(93, 84, 75, 0.04);
+        }
+
+        .input-box {
+            background-color: #F2EDE4 !important;
+            border: none;
+            border-radius: 1rem;
+            padding: 10px 15px;
+            width: 100%;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .gradient-btn {
+            background: linear-gradient(135deg, #64D2B7 0%, #4A90E2 100%);
+            color: white;
+            border-radius: 1rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .gradient-btn:active { transform: scale(0.98); opacity: 0.9; }
+
+        .item-row {
+            background: white;
+            border-radius: 1.25rem;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            box-shadow: 0 2px 8px rgba(93, 84, 75, 0.02);
+        }
+
+        /* ป้องกันปุ่มซ้อนทับกันที่ด้านล่าง */
+        .bottom-nav {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 48px);
+            max-width: 400px;
+            z-index: 50;
+        }
+    </style>
+</head>
+<body class="pb-40">
+
+    <div class="max-w-md mx-auto px-5 pt-8">
+        
+        <div class="flex justify-between items-center mb-6">
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-xl shadow-sm overflow-hidden bg-white p-1">
+                    <img src="1.png" alt="Logo" class="w-full h-full object-cover rounded-lg">
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold leading-none">FairShare</h1>
+                    <p class="text-[9px] font-bold text-[#A69680] uppercase tracking-widest mt-1">PWA EDITION</p>
+                </div>
+            </div>
+            <button onclick="resetApp()" class="w-9 h-9 bg-white rounded-full flex items-center justify-center text-red-200 shadow-sm active:text-red-400">
+                <i class="fa-solid fa-rotate-left text-sm"></i>
+            </button>
+        </div>
+
+        <div class="main-card p-8 mb-6 text-center">
+            <p class="text-[10px] font-bold text-[#A69680] uppercase tracking-widest mb-1">จ่ายคนละ</p>
+            <div class="flex justify-center items-baseline mb-5">
+                <span class="text-xl font-bold text-[#4A90E2] mr-1">฿</span>
+                <span id="perPersonDisplay" class="text-6xl font-black tracking-tighter">0</span>
+                <span id="decimalDisplay" class="text-xl font-bold text-[#D1C8BC]">.00</span>
+            </div>
+            
+            <div class="inline-flex items-center bg-[#F9F6F1] px-4 py-2 rounded-xl border border-[#F2EDE4] gap-4">
+                <div class="text-left">
+                    <p class="text-[8px] font-bold text-[#A69680] uppercase">ยอดรวม</p>
+                    <p id="totalDisplay" class="text-xs font-bold">฿0</p>
+                </div>
+                <div class="w-[1px] h-5 bg-[#E8DCC4]"></div>
+                <div class="text-left">
+                    <p class="text-[8px] font-bold text-[#A69680] uppercase">จำนวน</p>
+                    <p id="peopleDisplay" class="text-xs font-bold">2 คน</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-card p-5 mb-6">
+            <div class="flex gap-3 mb-3">
+                <div class="flex-[2]">
+                    <p class="text-[9px] font-bold text-[#A69680] mb-1.5 ml-1 uppercase">ชื่อรายการ</p>
+                    <input type="text" id="itemName" placeholder="เช่น ค่าข้าว" class="input-box">
+                </div>
+                <div class="flex-[1]">
+                    <p class="text-[9px] font-bold text-[#A69680] mb-1.5 ml-1 uppercase">ราคา</p>
+                    <input type="number" id="itemPrice" placeholder="0" class="input-box">
+                </div>
+            </div>
+            <button onclick="addItem()" class="w-full gradient-btn py-3.5 flex items-center justify-center gap-2 shadow-md">
+                <i class="fa-solid fa-plus text-[10px]"></i> เพิ่มรายการ
+            </button>
+        </div>
+
+        <div id="itemsContainer" class="mb-6"></div>
+
+        <div class="bg-[#F2EDE4]/50 p-4 rounded-2xl flex items-center justify-between border border-white/50">
+            <div class="flex items-center gap-3 ml-1">
+                <i class="fa-solid fa-users text-[#4A90E2] text-sm"></i>
+                <span class="font-bold text-[#8C7E6D] text-xs">จำนวนคนหาร</span>
+            </div>
+            <div class="flex items-center gap-3">
+                <button onclick="updatePeople(-1)" class="w-9 h-9 bg-white rounded-full flex items-center justify-center text-[#A69680] shadow-sm">
+                    <i class="fa-solid fa-minus text-[10px]"></i>
+                </button>
+                <span id="numPeopleText" class="text-xl font-black w-5 text-center">2</span>
+                <button onclick="updatePeople(1)" class="w-9 h-9 gradient-btn rounded-full flex items-center justify-center shadow-sm">
+                    <i class="fa-solid fa-plus text-[10px]"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-nav flex gap-3">
+        <button onclick="copyToClipboard()" class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-[#A69680] shadow-lg border border-white active:scale-90 transition-transform">
+            <i class="fa-solid fa-copy text-lg"></i>
+        </button>
+        <button onclick="shareSummary()" class="flex-1 gradient-btn rounded-2xl flex items-center justify-center gap-3 shadow-lg">
+            <i class="fa-solid fa-share-nodes text-sm"></i>
+            <span class="text-sm">ส่งสรุปยอดให้เพื่อน</span>
+        </button>
+    </div>
+
+    <script>
+        let items = [];
+        let numPeople = 2;
+
+        function addItem() {
+            const n = document.getElementById('itemName');
+            const p = document.getElementById('itemPrice');
+            if(n.value && p.value) {
+                items.push({ id: Date.now(), name: n.value, price: parseFloat(p.value) });
+                n.value = ''; p.value = '';
+                render();
+            }
+        }
+
+        function updatePeople(v) {
+            numPeople = Math.max(1, numPeople + v);
+            document.getElementById('numPeopleText').innerText = numPeople;
+            render();
+        }
+
+        function render() {
+            const container = document.getElementById('itemsContainer');
+            const total = items.reduce((s, i) => s + i.price, 0);
+            const per = total / numPeople;
+
+            document.getElementById('perPersonDisplay').innerText = Math.floor(per).toLocaleString();
+            document.getElementById('decimalDisplay').innerText = (per % 1).toFixed(2).substring(1);
+            document.getElementById('totalDisplay').innerText = `฿${total.toLocaleString()}`;
+            document.getElementById('peopleDisplay').innerText = `${numPeople} คน`;
+
+            container.innerHTML = items.map(item => `
+                <div class="item-row flex justify-between items-center shadow-sm">
+                    <div class="flex items-center gap-3">
+                        <div class="w-1.5 h-1.5 rounded-full bg-[#4A90E2]"></div>
+                        <span class="font-bold text-sm">${item.name}</span>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <span class="font-bold text-[#8C7E6D] text-sm">฿${item.price.toLocaleString()}</span>
+                        <button onclick="removeItem(${item.id})" class="text-[#D1C8BC] active:text-red-400 p-1">
+                            <i class="fa-solid fa-trash-can text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function removeItem(id) {
+            items = items.filter(i => i.id !== id);
+            render();
+        }
+
+        function resetApp() {
+            if(confirm("ล้างข้อมูลทั้งหมด?")) {
+                items = []; numPeople = 2;
+                document.getElementById('numPeopleText').innerText = 2;
+                render();
+            }
+        }
+
+        function copyToClipboard() {
+            const total = items.reduce((s, i) => s + i.price, 0);
+            const text = `💸 FairShare\nยอดรวม: ฿${total}\nจำนวน: ${numPeople} คน\nจ่ายคนละ: ฿${(total/numPeople).toFixed(2)}`;
+            navigator.clipboard.writeText(text);
+            alert("คัดลอกสรุปแล้ว ✨");
+        }
+
+        function shareSummary() {
+            if (navigator.share) {
+                navigator.share({ title: 'FairShare', text: 'สรุปยอดหารเงินจากแอป FairShare' });
+            } else {
+                copyToClipboard();
+            }
+        }
+        
+        render();
+    </script>
+</body>
+</html>
