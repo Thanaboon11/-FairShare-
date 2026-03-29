@@ -14,9 +14,6 @@
     <!-- Web App Manifest สำหรับ Android เพื่อแก้ปัญหาไอคอนตัว G -->
 <link rel="manifest" href="manifest.json">
 
-### คำแนะนำเพิ่มเติมสำหรับมือถือ:
-หลังจากแก้ไขแล้ว อย่าลืม **ลบไอคอนเดิม** ออกจากหน้าจอหลักก่อน และ **ล้างแคช (Cache)** ของ Chrome ในมือถือ 1 ครั้ง ก่อนที่จะกด "ติดตั้งแอป" ใหม่อีกรอบนะครับ วิธีนี้จะช่วยให้ระบบดึงข้อมูลไอคอนใหม่จากไฟล์ล่าสุดได้ถูกต้องครับ
-
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
